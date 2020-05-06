@@ -14,7 +14,7 @@ NAME = ft_ls
 
 CC = gcc
 
-CC_FLAGS = -Wall -Wextra  $(CF_ERROR)
+CC_FLAGS = -Wall -Wextra $(CF_ERROR)
 
 CF_ERROR = -Werror
 
@@ -23,27 +23,56 @@ SRCS = ft_ls.c parse_args.c read_dir.c sub_funcs.c print_entry.c writeout.c \
 		write_errors.c write_strings.c get_field_lengths.c get_vals.c \
 		print_short.c getset_format.c get_lst_params.c print_long.c
 
-HEADERS = ft_ls.h
+SRCDIR = ./srcs
+OBJDIR = ./objs
 
-OBJ = $(SRCS:.c=.o)
+INCLUDES = ./includes \
+			$(LIBFT_DIR)/includes
 
-LIBFT_PATH = ./libft/
+LIBFT_DIR = ./libft
+
+HEADER_FILES = ./includes/ft_ls.h
+
+ALL_OBJ = $(SRCS:%.c=%.o)
+
+OBJS = $(addprefix $(OBJDIR)/, $(ALL_OBJ))
+
+INCS = $(addprefix -I, $(INCLUDES))
+
+LIB_DIR =	$(LIBFT_DIR)
+
+LIB_DIR_FLAG = $(addprefix -L,$(LIB_DIR))
+
+LIBS = 	ft
+
+LIBS_FLAG = $(addprefix -l,$(LIBS))
+
+COMP_LIBFT = make -C $(LIBFT_DIR)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	make -C $(LIBFT_PATH)
-	$(CC) $(CC_FLAGS) $^ -L$(LIBFT_PATH) -lft -o $@
+$(NAME): $(LIBFT_DIR)/libft.a $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) $(LIB_DIR_FLAG) $(LIBS_FLAG) -o $@
 
-%.o: %.c $(HEADERS)
-	$(CC) $(CC_FLAGS) -I$(LIBFT_PATH)/includes -c $< -o $@
+$(LIBFT_DIR)/libft.a: libft
+
+libft:
+	$(COMP_LIBFT)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(HEADER_FILES) | $(OBJDIR)
+	$(CC) $(CC_FLAGS) $(INCS) -c $< -o $@
 
 clean:
-	make clean -C $(LIBFT_PATH)
-	rm -f $(OBJ)
+	rm -rf $(OBJDIR)
+	$(COMP_LIBFT) clean
 
 fclean: clean
-	rm -f $(LIBFT_PATH)libft.a
-	rm -f $(NAME)
+	rm -rf $(NAME)
+	$(COMP_LIBFT) fclean
 
 re: fclean all
+
+.PHONY: libft clean fclean all re

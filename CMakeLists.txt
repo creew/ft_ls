@@ -3,12 +3,29 @@ project(ft_ls)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(ft_ls ft_ls.c ft_ls.h parse_args.c read_dir.c sub_funcs.c
-        print_entry.c writeout.c print_sub.c time_sub.c print_rights.c print_list.c
-        callbacks.c write_errors.c write_strings.c get_field_lengths.c print_short.c
-        get_vals.c getset_format.c get_lst_params.c print_long.c)
+add_executable(ft_ls
+        srcs/ft_ls.c
+        srcs/parse_args.c
+        srcs/read_dir.c
+        srcs/sub_funcs.c
+        srcs/print_entry.c
+        srcs/writeout.c
+        srcs/print_sub.c
+        srcs/time_sub.c
+        srcs/print_rights.c
+        srcs/print_list.c
+        srcs/callbacks.c
+        srcs/write_errors.c
+        srcs/write_strings.c
+        srcs/get_field_lengths.c
+        srcs/print_short.c
+        srcs/get_vals.c
+        srcs/getset_format.c
+        srcs/get_lst_params.c
+        srcs/print_long.c)
 
-include_directories(./libft/includes)
+include_directories(./libft/includes
+        ./includes)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libft ft)
 target_link_libraries(ft_ls ft)
